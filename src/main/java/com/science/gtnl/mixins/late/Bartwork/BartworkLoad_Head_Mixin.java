@@ -21,11 +21,17 @@ public class BartworkLoad_Head_Mixin {
 
     @Inject(method = "runOnPlayerJoined(ZZ)V", at = @At("HEAD"), remap = false)
     private static void onRunOnPlayerJoined(boolean classicMode, boolean disableExtraGasRecipes, CallbackInfo ci) {
-        if (MainConfig.enableDeleteRecipe && !recipesDel) {
-            RemoveRecipes.removeRecipes();
-        }
-        RecipeUtil.removeMatchingRecipes(RecipeRegister.ConvertToCircuitAssembler, RecipeMaps.circuitAssemblerRecipes);
+        if (!recipesDel) {
+            if (MainConfig.enableDeleteRecipe) {
+                RemoveRecipes.removeRecipes();
+            }
 
-        recipesDel = true;
+            com.science.gtnl.loader.ScriptLoader.run();
+            com.science.gtnl.loader.RecipeLoader.loadRecipesCompleteInit();
+
+            RecipeUtil.removeMatchingRecipes(RecipeRegister.ConvertToCircuitAssembler, RecipeMaps.circuitAssemblerRecipes);
+
+            recipesDel = true;
+        }
     }
 }
